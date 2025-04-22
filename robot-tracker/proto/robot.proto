@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package robot;
+option go_package = "github.com/tetsufromtw/practice-robot/robot-tracker/proto";
+
+service RobotTracker {
+  // 用於發送機器人位置的流式 RPC
+  rpc TrackRobot(TrackRequest) returns (stream Position) {}
+}
+
+message TrackRequest {
+  // 空請求，可以在未來擴展
+}
+
+message Position {
+  float x = 1;
+  float y = 2;
+  int64 timestamp = 3;
+}
