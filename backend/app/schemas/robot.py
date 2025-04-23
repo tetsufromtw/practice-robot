@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Union, Dict
 
 
 class RobotPosition(BaseModel):
@@ -9,10 +9,15 @@ class RobotPosition(BaseModel):
     timestamp: int
 
 
+class ConnectionMessage(BaseModel):
+    """接続確認メッセージモデル"""
+    message: str
+
+
 class WebSocketMessage(BaseModel):
     """WebSocketメッセージモデル"""
     event: str
-    data: Optional[RobotPosition] = None
+    data: Optional[Union[RobotPosition, ConnectionMessage, Dict[str, str]]] = None
     
     class Config:
         schema_extra = {

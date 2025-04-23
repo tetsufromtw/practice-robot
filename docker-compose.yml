@@ -21,13 +21,21 @@ services:
       - practice-robot-network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile   
+    volumes:
+      - ./frontend:/app            # 🔁 掛整包 frontend code
+      - /app/node_modules          # 🛡️ 避免 node_modules 被蓋掉
     ports:
       - "3000:3000"
     depends_on:
       - backend
     environment:
       - NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+      - NEXT_PUBLIC_WS_URL=ws://localhost:8000/api/ws/robot
+
+    command: npm run dev           # 🔁 開發模式啟動指令
     networks:
       - practice-robot-network
 
