@@ -1,16 +1,16 @@
 package config
 
-// Config 保存應用程式配置
+// Config アプリケーション設定を保存する
 type Config struct {
     Port            string
     PositionMinX    float32
     PositionMaxX    float32
     PositionMinY    float32
     PositionMaxY    float32
-    UpdateFrequency int // 毫秒
+    UpdateFrequency int // ミリ秒
 }
 
-// NewDefaultConfig 返回帶有預設值的配置
+// NewDefaultConfig デフォルト値を持つ設定を返す
 func NewDefaultConfig() *Config {
     return &Config{
         Port:            "50051",

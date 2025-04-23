@@ -4,12 +4,12 @@ package robot;
 option go_package = "github.com/tetsufromtw/practice-robot/robot-tracker/proto";
 
 service RobotTracker {
-  // 用於發送機器人位置的流式 RPC
+  // ロボットの位置を送信するためのストリーミングRPC
   rpc TrackRobot(TrackRequest) returns (stream Position) {}
 }
 
 message TrackRequest {
-  // 空請求，可以在未來擴展
+  // 空のリクエスト、将来的に拡張可能
 }
 
 message Position {

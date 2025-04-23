@@ -8,36 +8,36 @@ logger = logging.getLogger(__name__)
 
 
 def create_start_app_handler(app: FastAPI) -> Callable:
-    """創建應用程式啟動處理函數"""
+    """アプリケーション起動時の処理ハンドラーを作成"""
     
     async def start_app() -> None:
-        """應用程式啟動時執行的操作"""
-        logger.info("應用程式啟動中...")
+        """アプリケーション起動時に実行される処理"""
+        logger.info("アプリケーションを起動中...")
         
-        # 連接到 robot-tracker gRPC 服務 (使用 await)
+        # robot-tracker gRPCサービスに接続 (awaitを使用)
         await robot_client.connect()
         
-        # 設置位置更新的回調函數
+        # 位置更新のコールバック関数を設定
         robot_client.set_position_callback(manager.broadcast_position)
         
-        # 開始接收機器人位置
+        # ロボット位置の受信を開始
         await robot_client.start_tracking()
         
-        logger.info("應用程式啟動完成")
+        logger.info("アプリケーションの起動が完了しました")
     
     return start_app
 
 
 def create_stop_app_handler(app: FastAPI) -> Callable:
-    """創建應用程式關閉處理函數"""
+    """アプリケーション終了時の処理ハンドラーを作成"""
     
     async def stop_app() -> None:
-        """應用程式關閉時執行的操作"""
-        logger.info("應用程式關閉中...")
+        """アプリケーション終了時に実行される処理"""
+        logger.info("アプリケーションを終了中...")
         
-        # 停止接收機器人位置
+        # ロボット位置の受信を停止
         await robot_client.stop_tracking()
         
-        logger.info("應用程式關閉完成")
+        logger.info("アプリケーションの終了が完了しました")
     
     return stop_app

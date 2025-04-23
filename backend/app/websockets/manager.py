@@ -5,45 +5,45 @@ from app.schemas.robot import RobotPosition, WebSocketMessage
 
 
 class ConnectionManager:
-    """管理 WebSocket 連接的類"""
+    """WebSocket接続を管理するクラス"""
     
     def __init__(self):
-        # 活躍的 WebSocket 連接列表
+        # アクティブなWebSocket接続のリスト
         self.active_connections: List[WebSocket] = []
     
     async def connect(self, websocket: WebSocket):
-        """處理新的 WebSocket 連接"""
+        """新しいWebSocket接続を処理"""
         await websocket.accept()
         self.active_connections.append(websocket)
-        await self.send_event(websocket, "connected", {"message": "Connected to robot tracker"})
+        await self.send_event(websocket, "connected", {"message": "ロボットトラッカーに接続されました"})
     
     def disconnect(self, websocket: WebSocket):
-        """斷開 WebSocket 連接"""
+        """WebSocket接続を切断"""
         if websocket in self.active_connections:
             self.active_connections.remove(websocket)
     
     async def send_event(self, websocket: WebSocket, event: str, data: Any = None):
-        """發送事件到特定的 WebSocket 連接"""
+        """特定のWebSocket接続にイベントを送信"""
         message = WebSocketMessage(event=event, data=data)
         await websocket.send_text(json.dumps(message.dict()))
     
     async def broadcast_position(self, position: RobotPosition):
-        """廣播機器人位置給所有連接的客戶端"""
+        """ロボットの位置をすべての接続クライアントにブロードキャスト"""
         if not self.active_connections:
             return
             
         message = WebSocketMessage(event="position_update", data=position)
         message_json = json.dumps(message.dict())
         
-        # 將訊息廣播給所有連接的客戶端
+        # メッセージをすべての接続クライアントにブロードキャスト
         for connection in self.active_connections:
             try:
                 await connection.send_text(message_json)
             except Exception:
-                # 如果發送失敗，我們可能需要關閉這個連接
-                # 但這裡我們只是忽略錯誤，避免影響其他連接
+                # 送信に失敗した場合、この接続を閉じる必要があるかもしれません
+                # ここではエラーを無視して、他の接続に影響を与えないようにします
                 pass
 
 
-# 全局連接管理器實例
+# グローバル接続マネージャーインスタンス
 manager = ConnectionManager()

@@ -3,14 +3,14 @@ from typing import Optional
 
 
 class RobotPosition(BaseModel):
-    """機器人位置模型"""
+    """ロボットの位置モデル"""
     x: float
     y: float
     timestamp: int
 
 
 class WebSocketMessage(BaseModel):
-    """WebSocket 訊息模型"""
+    """WebSocketメッセージモデル"""
     event: str
     data: Optional[RobotPosition] = None
     

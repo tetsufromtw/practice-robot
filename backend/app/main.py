@@ -7,7 +7,7 @@ from app.config import settings
 from app.core.events import create_start_app_handler, create_stop_app_handler
 from app.core.errors import setup_error_handlers
 
-# 配置日誌
+# ログを設定
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_application() -> FastAPI:
-    """創建 FastAPI 應用實例"""
+    """FastAPIアプリケーションインスタンスを作成"""
     application = FastAPI(
         title=settings.APP_NAME,
         debug=settings.DEBUG,
@@ -25,16 +25,16 @@ def create_application() -> FastAPI:
         openapi_url="/api/openapi.json",
     )
     
-    # 設置 CORS
+    # CORSを設定
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],  # 允許所有來源，生產環境中應限制
+        allow_origins=["*"],  # すべてのオリジンを許可（本番環境では制限すべき）
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
     
-    # 設置啟動和關閉事件
+    # 起動と終了イベントを設定
     application.add_event_handler(
         "startup",
         create_start_app_handler(application),
@@ -44,10 +44,10 @@ def create_application() -> FastAPI:
         create_stop_app_handler(application),
     )
     
-    # 設置錯誤處理
+    # エラーハンドリングを設定
     setup_error_handlers(application)
     
-    # 註冊路由
+    # ルーターを登録
     application.include_router(robot.router, prefix=settings.API_PREFIX)
     
     return application
@@ -57,7 +57,7 @@ app = create_application()
 
 
 if __name__ == "__main__":
-    # 直接啟動時使用
+    # 直接起動時に使用
     import uvicorn
     
     uvicorn.run(

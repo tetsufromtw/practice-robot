@@ -5,21 +5,21 @@ import (
     "os"
 )
 
-// Logger 定義日誌介面
+// Logger ログインターフェースを定義
 type Logger interface {
     Info(format string, v ...interface{})
     Error(format string, v ...interface{})
     Debug(format string, v ...interface{})
 }
 
-// SimpleLogger 實現基本日誌功能
+// SimpleLogger 基本的なログ機能を実装
 type SimpleLogger struct {
     infoLogger  *log.Logger
     errorLogger *log.Logger
     debugLogger *log.Logger
 }
 
-// NewSimpleLogger 創建新的簡單日誌實例
+// NewSimpleLogger 新しいシンプルなログインスタンスを作成
 func NewSimpleLogger() *SimpleLogger {
     return &SimpleLogger{
         infoLogger:  log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime),
@@ -28,17 +28,17 @@ func NewSimpleLogger() *SimpleLogger {
     }
 }
 
-// Info 記錄信息級別日誌
+// Info 情報レベルのログを記録
 func (l *SimpleLogger) Info(format string, v ...interface{}) {
     l.infoLogger.Printf(format, v...)
 }
 
-// Error 記錄錯誤級別日誌
+// Error エラーレベルのログを記録
 func (l *SimpleLogger) Error(format string, v ...interface{}) {
     l.errorLogger.Printf(format, v...)
 }
 
-// Debug 記錄調試級別日誌
+// Debug デバッグレベルのログを記録
 func (l *SimpleLogger) Debug(format string, v ...interface{}) {
     l.debugLogger.Printf(format, v...)
 }

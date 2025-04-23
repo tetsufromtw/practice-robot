@@ -17,45 +17,45 @@ import (
 )
 
 func main() {
-    // 初始化配置
+    // 設定を初期化
     cfg := config.NewDefaultConfig()
 
-    // 初始化日誌
+    // ロガーを初期化
     log := logger.NewSimpleLogger()
 
-    // 創建位置生成器
+    // 位置生成器を作成
     generator := position.NewRandomGenerator(cfg)
 
-    // 創建服務實例
+    // サービスインスタンスを作成
     trackerService := service.NewRobotTrackerService(cfg, generator, log)
 
-    // 監聽指定端口
+    // 指定ポートでリッスン
     address := fmt.Sprintf(":%s", cfg.Port)
     lis, err := net.Listen("tcp", address)
     if err != nil {
-        log.Error("無法監聽端口: %v", err)
+        log.Error("ポートをリッスンできません: %v", err)
         os.Exit(1)
     }
 
-    // 創建 gRPC 服務器
+    // gRPCサーバーを作成
     grpcServer := grpc.NewServer()
 
-    // 註冊服務
+    // サービスを登録
     proto.RegisterRobotTrackerServer(grpcServer, trackerService)
 
-    // 處理優雅關閉
+    // 優雅なシャットダウンを処理
     go func() {
         c := make(chan os.Signal, 1)
         signal.Notify(c, os.Interrupt, syscall.SIGTERM)
         <-c
-        log.Info("接收到關閉信號，正在關閉服務...")
+        log.Info("終了シグナルを受信、サービスをシャットダウン中...")
         grpcServer.GracefulStop()
     }()
 
-    // 啟動服務器
-    log.Info("robot-tracker 服務啟動於 %s", address)
+    // サーバーを起動
+    log.Info("robot-tracker サービスが %s で起動しました", address)
     if err := grpcServer.Serve(lis); err != nil {
-        log.Error("服務器出錯: %v", err)
+        log.Error("サーバーエラー: %v", err)
         os.Exit(1)
     }
 }
